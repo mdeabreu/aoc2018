@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::error::Error;
 use std::fs;
 
@@ -42,7 +43,21 @@ fn part1(contents: &String) -> i32 {
 }
 
 fn part2(contents: &String) -> i32 {
-    0
+    let mut sum: i32 = 0;
+    let mut sums = HashSet::new();
+    sums.insert(0);
+
+    loop {
+        for line in contents.lines() {
+            let num: i32 = line.parse().unwrap();
+            sum += num;
+            if sums.contains(&sum) {
+                return sum;
+            } else {
+                sums.insert(sum);
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -154,5 +169,34 @@ mod part2 {
 
         let sum = part2(&contents);
         assert_eq!(14, sum);
+    }
+}
+
+#[cfg(test)]
+mod answers {
+    use super::*;
+
+    #[test]
+    #[ignore]
+    fn part1() {
+        let config = Config {
+            filename: String::from("../input/day1.txt"),
+        };
+        let contents = fs::read_to_string(config.filename).unwrap();
+        let sum = super::part1(&contents);
+
+        assert_eq!(442, sum);
+    }
+
+    #[test]
+    #[ignore]
+    fn part2() {
+        let config = Config {
+            filename: String::from("../input/day1.txt"),
+        };
+        let contents = fs::read_to_string(config.filename).unwrap();
+        let sum = super::part2(&contents);
+
+        assert_eq!(59908, sum);
     }
 }
